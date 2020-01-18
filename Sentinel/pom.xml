@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>spring-cloud-alibaba-study</artifactId>
+        <groupId>com.xuzf.alibaba</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>Sentinel</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <properties>
+        <sentinel.version>1.6.3</sentinel.version>
+    </properties>
+    <dependencies>
+       <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-webflux</artifactId>
+        <version>2.1.4.RELEASE</version>
+    </dependency>
+    <!--sentinle 注解   开始-->
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-core</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-annotation-aspectj</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+    <!--sentinle 注解   结束-->
+    <!--sentinle 持久化   开始-->
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-datasource-extension</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-datasource-redis</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-datasource-nacos</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-datasource-zookeeper</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-datasource-apollo</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+    <!--sentinle 持久化   结束-->
+    <!--sentinle 集群   开始-->
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-transport-simple-http</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-cluster-client-default</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-cluster-server-default</artifactId>
+        <version>${sentinel.version}</version>
+    </dependency>
+    <!--sentinle 集群   结束-->
+    <!--其它依赖-->
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>2.9.1</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>21.0</version>
+    </dependency>
+
+    </dependencies>
+</project>

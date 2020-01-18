@@ -1,0 +1,30 @@
+>&emsp;Netty是一个基于java NIO的**异步的且基于事件驱动**的实现。
+
+##EventLoop  
+&emsp;每个EventLoop会绑定一个线程Thread;每个channel会注册到一个EventLoop上，后续针对这个channel的I/O操作都会交给EventLoop绑定的线程操作，这也就消除了对于同步的需要。
+##ChannelFuture
+&emsp;在netty中，所有的I/O操作都是异步的，请求结果并不会立即返回。所以就需要一个对象代表某次I/O操作的结果，这样可以之后的某个时间节点通过该对象获取请求结果。这个对象也就是ChannelFuture，它是作为某次IO操作的结果的占位符。<br>
+&emsp;我们知道，在java api中也有类似的类Future,那么Netty为啥还要重新提供一个ChannelFuture呢？这是因为java中Future是作为一次执行结果占位符，如果要拿到结果的话，还是要主动的去检查并获取结果(比如定时的查看执行是否成功返回)。
+但是Netty提供的ChannelFuture可以通过addListener绑定ChannelFutureListener，这样当某个ChannelFuture占位符执行结束会得到通知并通过监听器进行回调。
+&emsp;此外，所有属于同一个Channel的I/O操作将会被保证其按照调用的顺序被执行。
+##ChannelHandler
+&emsp;从编程人员的角度来看，ChannelHandler应该是最备受关注的。ChannelHandler基本负责了所有出站和入站事件的应用程序处理逻辑。ChannelHandler上的方法都是由相应的网络I/O事件触发的。
+##ChannelPipeline
+>&emsp;当channel被创建时，会为其绑定一个该channel专属的ChannelPipeline。<br>
+
+&emsp;在一次完整的网络I/O事件传输过程，传输数据从最开始以二进制输入写到到端口，并最终转换成应用程序可理解的对象，这整个过程中可能会经过
+很多道程序(ChannelHandler)加工：比如沾包粘包、序列化、剔除不满足需求的数据等。那么Netty框架是如何保证这些不同的ChannelHandler有序而按需正确的被依次调用呢？
+这里就用到了ChannelPipeline。<br>
+&emsp; ChannelPipeline提供了这些ChannelHandler链的容器，当然也就知道了这些ChannelHandler的执行顺序。而每个ChannelHandler也会持有它所属的 ChannelPipeline的引用。
+当网络I/O事件触发时，它会沿着这个ChannelPipeline进行传递下去。首先它会先被head的ChannelHandler优先处理加工，然后再由ChannelHandler绑定的ChannelPipeline传递给每个ChannelHandler。
+每个ChannelHandler被添加到ChannelPipeline时都会被分配一个ChannelHandlerContext，其代表了ChannelHandler和ChannelPipeline之间的绑定。
+
+##BootStrap
+&emsp;客户端和服务端都由一个引导类，用于引导客户端或者服务断点额创建：
+>ServerBootStrap：服务端引导类，用于将服务端进程绑定到一个监听的本地端口上。它需要两个EventLoopGroup<br>
+>BootStrap：客户端引导类，用于将客户端进程绑定到指定远程主机的指定端口上（服务端连接）。它只需要一个EventLoopGroup。<br>
+
+&emsp;为什么ServerBootStrap需要两个group组呢？<br>
+>&emsp;对于服务端进程，因为它维护了两种channel。<br>
+&emsp;第一种，只包含了一个代表服务器自身的ServerSocketChannel，主要用于监听接口客户端的连接，并创建SocketChannel。因此会由一个group专门为这个ServerSocketChannel提供并绑定一个EventLoop，用于响应客户端的连接的I/O事件，并创建SocketChannel。<br>
+&emsp;第二种，包含了所有已创建的，用于接口客户端网络I/O事件的SocketChannel。因此会由一个group专门为每个SocketChannel提供并绑定一个EventLoop，用于响应对应Channel上的网络I/O事件
